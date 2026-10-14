@@ -1,0 +1,12 @@
+.env
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.log
+.idea/
+.vscode/
+.DS_Store
+.[c]laude/
+[C]LAUDE.md
+[A]GENTS.md
