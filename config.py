@@ -9,6 +9,7 @@ class Config:
     webhook_base_url: str | None
     webhook_secret: str
     port: int
+    database_url: str | None
 
     @property
     def use_webhook(self) -> bool:
@@ -62,4 +63,5 @@ def load_config() -> Config:
         webhook_base_url=base_url,
         webhook_secret=secret,
         port=port,
+        database_url=os.getenv("DATABASE_URL", "").strip() or None,
     )

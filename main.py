@@ -6,6 +6,7 @@ from aiogram import Bot, Dispatcher
 from aiogram.webhook.aiohttp_server import SimpleRequestHandler, setup_application
 from aiohttp import web
 
+import db
 from config import Config, load_config
 from handlers import router
 
@@ -26,15 +27,21 @@ async def health(_: web.Request) -> web.Response:
     return web.Response(text="ok")
 
 
-def build_dispatcher() -> Dispatcher:
+def build_dispatcher(config: Config) -> Dispatcher:
     dp = Dispatcher()
     dp.include_router(router)
+
+    async def db_startup() -> None:
+        await db.connect(config.database_url)
+
+    dp.startup.register(db_startup)
+    dp.shutdown.register(db.close)
     return dp
 
 
 def run_webhook(config: Config) -> None:
     bot = Bot(token=config.bot_token)
-    dp = build_dispatcher()
+    dp = build_dispatcher(config)
 
     async def on_startup(bot: Bot) -> None:
         await bot.set_webhook(
@@ -69,7 +76,7 @@ def run_webhook(config: Config) -> None:
 
 async def run_polling(config: Config) -> None:
     bot = Bot(token=config.bot_token)
-    dp = build_dispatcher()
+    dp = build_dispatcher(config)
     try:
         await bot.delete_webhook(drop_pending_updates=False)
         logger.info("WEBHOOK_BASE_URL not set, starting long polling")

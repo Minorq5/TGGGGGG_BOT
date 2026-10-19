@@ -6,6 +6,7 @@ from aiogram.exceptions import TelegramBadRequest
 from aiogram.filters import CommandObject, CommandStart
 from aiogram.types import CallbackQuery, FSInputFile, Message
 
+import db
 import keyboards
 import texts
 
@@ -25,6 +26,7 @@ async def cmd_start(message: Message, command: CommandObject) -> None:
     source = command.args.strip() if command.args and command.args.strip() else "none"
     user_id = message.from_user.id if message.from_user else "unknown"
     logger.info("START user_id=%s source=%s", user_id, source)
+    db.track(message.from_user, "start", source=None if source == "none" else source)
 
     photo = _welcome_file_id or FSInputFile(WELCOME_PATH)
     try:
@@ -61,6 +63,7 @@ async def _edit_caption(callback: CallbackQuery, caption: str, markup) -> None:
 
 @router.callback_query(F.data == texts.CB_ABOUT)
 async def on_about(callback: CallbackQuery) -> None:
+    db.track(callback.from_user, "about")
     try:
         await _edit_caption(callback, texts.ABOUT_CAPTION, keyboards.about_keyboard())
     finally:
@@ -69,6 +72,7 @@ async def on_about(callback: CallbackQuery) -> None:
 
 @router.callback_query(F.data == texts.CB_BACK)
 async def on_back(callback: CallbackQuery) -> None:
+    db.track(callback.from_user, "back")
     try:
         await _edit_caption(callback, texts.START_CAPTION, keyboards.start_keyboard())
     finally:
@@ -82,4 +86,10 @@ async def on_unknown_callback(callback: CallbackQuery) -> None:
 
 @router.message()
 async def fallback(message: Message) -> None:
+    db.track(
+        message.from_user,
+        "message",
+        content_type=message.content_type,
+        text=message.text or message.caption,
+    )
     await message.answer(texts.FALLBACK_TEXT)
