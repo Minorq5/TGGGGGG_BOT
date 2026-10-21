@@ -92,4 +92,4 @@ async def fallback(message: Message) -> None:
         content_type=message.content_type,
         text=message.text or message.caption,
     )
-    await message.answer(texts.FALLBACK_TEXT, reply_markup=keyboards.download_keyboard())
+    await message.answer(texts.FALLBACK_TEXT)

@@ -23,11 +23,3 @@ def about_keyboard() -> InlineKeyboardMarkup:
             [_rustore_button()],
         ]
     )
-
-
-def download_keyboard() -> InlineKeyboardMarkup:
-    return InlineKeyboardMarkup(
-        inline_keyboard=[
-            [InlineKeyboardButton(text=texts.BTN_DOWNLOAD, url=texts.RUSTORE_URL)],
-        ]
-    )

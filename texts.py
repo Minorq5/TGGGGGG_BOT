@@ -20,18 +20,11 @@ ABOUT_CAPTION = (
     "Ozon, Яндекс Маркета, Мегамаркета, AliExpress Russia, Lamoda и Joom."
 )
 
-FALLBACK_TEXT = (
-    "Искать товары я не умею — это делает приложение «Вишня». "
-    "Скачайте его в RuStore и отправьте ему этот запрос: ИИ-помощник подберёт "
-    "варианты и покажет предложения магазинов.\n"
-    "\n"
-    "Меню бота — /start"
-)
+FALLBACK_TEXT = "Нажмите /start, чтобы открыть меню"
 
 BTN_ABOUT = "О приложении"
 BTN_BACK = "Назад"
 BTN_RUSTORE = "RuStore"
-BTN_DOWNLOAD = "Скачать в RuStore"
 
 CB_ABOUT = "about"
 CB_BACK = "back"
